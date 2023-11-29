@@ -48,7 +48,7 @@
 ### Запуск FRONT:
 
 1. Установить nodejs (версия 18.18.0) на компьютер;
-2. Скачать [FRONT](https://github.com/frepingod/netology-cloud-storage-front) (JavaScript);
+2. Скачать [FRONT](https://github.com/Sam1549/netology-diplom-frontend) (JavaScript);
 3. Перейти в папку FRONT приложения и все команды для запуска выполнять из нее;
 4. Следуя описанию README.md FRONT проекта запустить nodejs приложение (npm install...);
 5. Для запуска FRONT приложения с расширенным логированием использовать команду: `npm run serve`.
