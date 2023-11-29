@@ -4,8 +4,10 @@ import com.example.netologydiplom.dto.request.AuthRequest;
 import com.example.netologydiplom.dto.response.AuthResponse;
 import com.example.netologydiplom.dto.request.RegisterRequest;
 import com.example.netologydiplom.exceptions.UnauthorizedException;
-import com.example.netologydiplom.utils.JwtTokenUtils;
+import com.example.netologydiplom.repositories.AuthRepository;
+import com.example.netologydiplom.security.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,21 +17,25 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final UserService userService;
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
+    private final AuthRepository authRepository;
 
 
-    public ResponseEntity<?> createAuthToken(AuthRequest authRequest) {
+    public AuthResponse login(AuthRequest authRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new UnauthorizedException("Неправильный логин или пароль");
+            throw new UnauthorizedException("Incorrect login or password");
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getLogin());
         String token = jwtTokenUtils.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthResponse(token));
+        log.info("User '{}' is authorized", userDetails.getUsername());
+        authRepository.putTokenAndUsername(token, userDetails.getUsername());
+        return new AuthResponse(token);
     }
 
 
@@ -37,11 +43,20 @@ public class AuthService {
         if (userService.createNewUser(registerRequest)) {
             UserDetails userDetails = userService.loadUserByUsername(registerRequest.getLogin());
             String token = jwtTokenUtils.generateToken(userDetails);
+            log.info("New User '{}' successful registration", userDetails.getUsername());
             return ResponseEntity.ok(new AuthResponse(token));
         } else {
-//            return new ResponseEntity<>(new ExceptionResponse("Такой пользователь уже существует",HttpStatus.BAD_REQUEST.value()),HttpStatus.BAD_REQUEST);
-            throw new UnauthorizedException("Такой пользователь уже существует");
+            throw new UnauthorizedException("User with the same username already exists");
         }
 
+    }
+
+    public void logout(String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        final String username = authRepository.getUsernameByToken(token);
+        log.info("User '{}' logout", username);
+        authRepository.removeTokenAndUsernameByToken(token);
     }
 }

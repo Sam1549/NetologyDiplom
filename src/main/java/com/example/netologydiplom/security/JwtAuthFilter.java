@@ -1,6 +1,5 @@
-package com.example.netologydiplom.configs;
+package com.example.netologydiplom.security;
 
-import com.example.netologydiplom.utils.JwtTokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -36,9 +34,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtils.getUsername(jwt);
             } catch (ExpiredJwtException e) {
-                log.debug("Время жизни токена вышло");
+                log.debug("Expired token life");
             } catch (SignatureException e) {
-                log.debug("Подпись неправильная");
+                log.debug("Signature is not valid");
             }
         }
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface FilesRepository extends JpaRepository<CloudFile, Long> {
     Optional<List<CloudFile>> findByUserId(Long id);
 
-    Optional<CloudFile> findByFileNameAndUserId(String filename,Long id);
+    Optional<CloudFile> findByFileNameAndUserId(String filename, Long id);
 
 
 }

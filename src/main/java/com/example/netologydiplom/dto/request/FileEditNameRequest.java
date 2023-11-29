@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FileEditNameRequest {
-    private  String filename;
+    private String filename;
 }

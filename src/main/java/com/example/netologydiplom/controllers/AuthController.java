@@ -16,11 +16,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
-        return authService.createAuthToken(authRequest);
+        return ResponseEntity.ok(authService.login(authRequest));
     }
 
     @PutMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("auth-token") String token) {
+        authService.logout(token);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

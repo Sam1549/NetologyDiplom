@@ -21,7 +21,7 @@ public class CloudFile {
     private Long id;
 
 
-    @Column(nullable = false,name = "filename")
+    @Column(nullable = false, name = "filename")
     private String fileName;
 
     @Column(nullable = false)

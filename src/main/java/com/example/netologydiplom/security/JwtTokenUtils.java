@@ -1,4 +1,4 @@
-package com.example.netologydiplom.utils;
+package com.example.netologydiplom.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
