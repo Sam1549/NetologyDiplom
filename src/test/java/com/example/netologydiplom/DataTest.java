@@ -1,4 +1,4 @@
-package ru.diploma.cloudstor;
+package com.example.netologydiplom;
 
 import com.example.netologydiplom.dto.request.AuthRequest;
 import com.example.netologydiplom.dto.response.AuthResponse;

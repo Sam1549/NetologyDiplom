@@ -1,5 +1,6 @@
-package ru.diploma.cloudstor.service;
+package com.example.netologydiplom.service;
 
+import com.example.netologydiplom.DataTest;
 import com.example.netologydiplom.entyties.User;
 import com.example.netologydiplom.repositories.UserRepository;
 import com.example.netologydiplom.services.UserService;
@@ -17,7 +18,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static ru.diploma.cloudstor.DataTest.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("=== Testing User service ===")
@@ -31,13 +31,13 @@ public class UserServiceTest {
 
     @Test
     void loadUserByUsername() {
-        User userExpected = (User) USER_DETAILS;
-        when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(userExpected));
-        assertEquals(userExpected, userService.loadUserByUsername(USERNAME));
+        User userExpected = (User) DataTest.USER_DETAILS;
+        when(userRepository.findByUsername(DataTest.USERNAME)).thenReturn(Optional.of(userExpected));
+        assertEquals(userExpected, userService.loadUserByUsername(DataTest.USERNAME));
     }
 
     @Test
     void loadUserByUsernameUnauthorized() {
-        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(USER_UNAUTHORIZED));
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(DataTest.USER_UNAUTHORIZED));
     }
 }
