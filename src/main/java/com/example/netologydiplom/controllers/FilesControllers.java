@@ -3,18 +3,16 @@ package com.example.netologydiplom.controllers;
 import com.example.netologydiplom.dto.request.FileEditNameRequest;
 import com.example.netologydiplom.dto.response.FileWebResponse;
 import com.example.netologydiplom.services.FilesService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FilesControllers {
 
     private final FilesService filesService;
@@ -23,7 +21,7 @@ public class FilesControllers {
     @PostMapping("/file")
     public ResponseEntity<?> uploadFile(@RequestHeader("auth-token") String authToken, @RequestParam("filename") String filename, MultipartFile file) {
         filesService.uploadFile(authToken, filename, file);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 

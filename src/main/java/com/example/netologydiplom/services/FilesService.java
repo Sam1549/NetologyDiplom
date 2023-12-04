@@ -18,7 +18,6 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.of;
+
 import static java.util.Optional.ofNullable;
 
 @Service
@@ -45,7 +44,6 @@ public class FilesService {
     @Transactional
     public List<FileWebResponse> getAllFiles(String authToken) {
         String username = getUsername(authToken);
-//        Long id = getUserIdFromToken(authToken).orElseThrow(() -> new UnauthorizedException(String.format("User '%s' not found", username)));
         User user = getUserFromToken(authToken).orElseThrow(() -> new UnauthorizedException(String.format("User '%s' not found", username)));
         List<CloudFile> list = filesRepository.findByUserId(user.getId()).orElseThrow(() -> new FileCloudException("Files not found"));
         return list.stream()
@@ -99,9 +97,9 @@ public class FilesService {
             throw new FileCloudException(String.format("File '%s' not found!", filename));
         } else {
             CloudFile cloudFile = fileIsHave.get();
-            cloudFile.setFileName(fileEditNameRequest.getFilename());
+            cloudFile.setFileName(fileEditNameRequest.filename());
             filesRepository.save(cloudFile);
-            log.info("file '{}' was successfully renamed '{}'   by user '{}'", filename, fileEditNameRequest.getFilename(), username);
+            log.info("file '{}' was successfully renamed '{}'   by user '{}'", filename, fileEditNameRequest.filename(), username);
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -147,7 +145,6 @@ public class FilesService {
         if (authToken.startsWith("Bearer ")) {
             final String authTokenWithoutBearer = authToken.split(" ")[1];
             final String username = authRepository.getUsernameByToken(authTokenWithoutBearer);
-//            return username.isEmpty() ? Optional.empty() : Optional.of(username);
             return username;
         }
         return null;

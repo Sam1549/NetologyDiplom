@@ -31,6 +31,9 @@ public class SecurityConfig {
     private final UserService userService;
     private final JwtAuthFilter jwtAuthFilter;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final static String LOGIN_URL = "/login";
+    private final static String REGISTER_URL = "/register";
+    private final static String LOGOUT_URL = "/logout";
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -42,21 +45,22 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
+
         http
                 .csrf(CsrfConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .headers().frameOptions().disable()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/login").permitAll()
-                .requestMatchers("/register").permitAll()
-                .requestMatchers("/login").permitAll()
+                .requestMatchers(LOGIN_URL).permitAll()
+                .requestMatchers(REGISTER_URL).permitAll()
+                .requestMatchers(LOGIN_URL).permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .logout().logoutUrl("/logout")
+                .logout().logoutUrl(LOGOUT_URL)
                 .deleteCookies("JSESSIONID")
                 .clearAuthentication(true)
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl(LOGIN_URL)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

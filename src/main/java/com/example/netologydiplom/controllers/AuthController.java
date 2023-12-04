@@ -4,7 +4,6 @@ import com.example.netologydiplom.dto.request.AuthRequest;
 import com.example.netologydiplom.dto.request.RegisterRequest;
 import com.example.netologydiplom.services.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,7 @@ public class AuthController {
     @PutMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("auth-token") String token) {
         authService.logout(token);
-        return ResponseEntity.ok(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/register")

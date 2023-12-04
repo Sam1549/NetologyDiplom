@@ -27,11 +27,11 @@ public class AuthService {
 
     public AuthResponse login(AuthRequest authRequest) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword()));
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.login(), authRequest.password()));
         } catch (BadCredentialsException e) {
             throw new UnauthorizedException("Incorrect login or password");
         }
-        UserDetails userDetails = userService.loadUserByUsername(authRequest.getLogin());
+        UserDetails userDetails = userService.loadUserByUsername(authRequest.login());
         String token = jwtTokenUtils.generateToken(userDetails);
         log.info("User '{}' is authorized", userDetails.getUsername());
         authRepository.putTokenAndUsername(token, userDetails.getUsername());
@@ -41,7 +41,7 @@ public class AuthService {
 
     public ResponseEntity<?> registerNewUser(RegisterRequest registerRequest) {
         if (userService.createNewUser(registerRequest)) {
-            UserDetails userDetails = userService.loadUserByUsername(registerRequest.getLogin());
+            UserDetails userDetails = userService.loadUserByUsername(registerRequest.login());
             String token = jwtTokenUtils.generateToken(userDetails);
             log.info("New User '{}' successful registration", userDetails.getUsername());
             return ResponseEntity.ok(new AuthResponse(token));

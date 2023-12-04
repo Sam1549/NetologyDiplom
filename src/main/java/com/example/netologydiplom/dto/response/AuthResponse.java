@@ -1,12 +1,11 @@
 package com.example.netologydiplom.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
-@Data
-@AllArgsConstructor
-public class AuthResponse {
+
+public record AuthResponse(String authToken) {
     @JsonProperty("auth-token")
-    private String authToken;
+    public String authToken() {
+        return authToken;
+    }
 }

@@ -4,9 +4,7 @@ import com.example.netologydiplom.dto.request.RegisterRequest;
 import com.example.netologydiplom.entyties.User;
 import com.example.netologydiplom.repositories.RoleRepository;
 import com.example.netologydiplom.repositories.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,12 +30,12 @@ public class UserService implements UserDetailsService {
 
 
     public Boolean createNewUser(RegisterRequest registerRequest) {
-        if (findByUsername(registerRequest.getLogin()).isPresent()) {
+        if (findByUsername(registerRequest.login()).isPresent()) {
             return false;
         }
         User user = new User();
-        user.setUsername(registerRequest.getLogin());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setUsername(registerRequest.login());
+        user.setPassword(passwordEncoder.encode(registerRequest.password()));
         user.setRoles(List.of(roleRepository.findRoleByName("ROLE_USER").get()));
         userRepository.save(user);
         return true;
@@ -49,11 +46,6 @@ public class UserService implements UserDetailsService {
         User user = findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(
                 String.format("User '%s' not found", username)));
         return user;
-//        return new org.springframework.security.core.userdetails.User(
-//                user.getUsername(),
-//                user.getPassword(),
-//                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName().toString())).collect(Collectors.toList())
-//        );
     }
 
 }

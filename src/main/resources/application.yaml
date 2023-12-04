@@ -20,3 +20,4 @@ spring:
 
 
 
+origins: 'http://localhost:8080'
